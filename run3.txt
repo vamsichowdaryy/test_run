@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Build') {
+            steps {
+                // Add build steps here
+                // For example, building a Maven project:
+                sh 'mvn clean package'
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                // Add test steps here
+                // For example, running tests:
+                sh 'mvn test'
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                // Add deployment steps here
+                // For example, deploying a WAR file to Tomcat:
+                sh 'cp target/your-web-app.war /path/to/tomcat/webapps/'
+            }
+        }
+    }
+}

@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout the source code from your version control system
+                // For example, if using Git:
+                git 'https://github.com/your-username/your-maven-project.git'
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                // Run Maven build
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Run Maven tests
+                sh 'mvn test'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // Deploy the Maven artifact to a remote repository or a server
+                // For example, if deploying to Maven Central repository:
+                sh 'mvn deploy'
+            }
+        }
+
+        stage('Clean Up') {
+            steps {
+                // Clean up any temporary files or directories
+                sh 'mvn clean'
+            }
+        }
+    }
+}
