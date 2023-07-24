@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+
+    environment {
+        TOMCAT_HOME = '/path/to/tomcat' // Replace this with the actual path to your Tomcat installation
+        WAR_FILE = 'your-web-app.war' // Replace this with the name of your WAR file
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout the source code from your version control system
+                // For example, if using Git:
+                git 'https://github.com/your-username/your-web-app.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // Build your Java web application
+                // For example, if using Maven:
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Deploy to Tomcat') {
+            steps {
+                // Stop Tomcat to avoid any issues during deployment
+                sh "${TOMCAT_HOME}/bin/shutdown.sh"
+
+                // Remove the existing WAR file from Tomcat's webapps directory
+                sh "rm -f ${TOMCAT_HOME}/webapps/${WAR_FILE}"
+
+                // Copy the newly built WAR file to Tomcat's webapps directory
+                sh "cp target/${WAR_FILE} ${TOMCAT_HOME}/webapps/"
+
+                // Start Tomcat
+                sh "${TOMCAT_HOME}/bin/startup.sh"
+
+                // Wait for Tomcat to start (adjust the sleep time as needed)
+                sleep 30
+
+                // Optionally, you can add steps here to run any integration tests
+                // or other tasks that need to be performed after deployment
+            }
+        }
+    }
+}
